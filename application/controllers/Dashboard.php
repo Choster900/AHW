@@ -1,11 +1,10 @@
 <?php
-
-class Dashboard extends CI_Controller
+include (APPPATH."controllers/Padre.php");
+class Dashboard extends Padre
 {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->helper("url");
 	}
 	public  function  index(){
 		$data["title"] = "Dashboard";
