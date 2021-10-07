@@ -21,7 +21,6 @@ class Login_m extends CI_Model
 		$this->db->group_by(array("u.id"));
 
 		$query = $this->db->get();
-
 		return $query->row();
 	}
 

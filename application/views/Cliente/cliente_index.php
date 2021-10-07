@@ -34,6 +34,7 @@
 						<td>$value->direccion</td>
 						<td>
 							<div class='btn btn-primary editarCliente' id='$value->id'>Editar</div>
+							<div class='btn btn-danger borrarCliente' id='$value->id'>Borrar</div>
 						</td>
 				</tr>";
 		}
@@ -151,6 +152,7 @@
 						</div>
 					</div>
 					<button type="submit" name="cmdEditarCliente" class="btn btn-primary">Editar client</button>
+
 				</form>
 			</div>
 

@@ -43,13 +43,23 @@ class Cliente extends Padre
 
 	public function jalar_info()
 	{
-
 		$idCliente = $this->input->post("id");
 		$cliente = $this->Cliente_m->getAllClientes($idCliente);
 		echo json_encode($cliente);
-
 	}
-	public  function update_cliente(){
+
+	public function eliminar()
+	{
+		$idCliente = $this->input->post("id");
+		$res = $cliente = $this->Cliente_m->delete($idCliente);
+
+		if ($res > 0) {
+			header("Location: " . site_url("cliente"));
+		}
+	}
+
+	public function update_cliente()
+	{
 		$data = array(
 			"nombres" => $this->input->post("nombre"),
 			"apellidos" => $this->input->post("Apellido"),
@@ -57,9 +67,9 @@ class Cliente extends Padre
 			"telefono" => $this->input->post("Telefono"),
 			"email" => $this->input->post("email"),
 		);
-		$res = $this->Cliente_m->update_cliente_m(array("id"=>$this->input->post("idCLiente")),$data);
+		$res = $this->Cliente_m->update_cliente_m(array("id" => $this->input->post("idCLiente")), $data);
 
-		if ($res>0){
+		if ($res > 0) {
 			header("Location: " . site_url("cliente"));
 		}
 	}
