@@ -1,0 +1,153 @@
+CREATE DATABASE REGISTRO;
+USE REGISTRO;
+CREATE TABLE MAT_MATERIA (
+    MAT_ID INT PRIMARY KEY AUTO_INCREMENT,
+    MAT_NOMBRE VARCHAR(100) NOT NULL
+);
+CREATE TABLE GRD_GRADO (
+    GRD_ID INT PRIMARY KEY AUTO_INCREMENT,
+    GRD_NOMBRE VARCHAR(100) NOT NULL
+);
+CREATE TABLE MXG_MATERIASXGRADO (
+    MXG_ID INT PRIMARY KEY AUTO_INCREMENT,
+    MXG_ID_GRD INT,
+    MXG_ID_MAT INT,
+    FOREIGN KEY (MXG_ID_GRD)
+        REFERENCES GRD_GRADO (GRD_ID),
+    FOREIGN KEY (MXG_ID_MAT)
+        REFERENCES MAT_MATERIA (MAT_ID)
+);
+
+CREATE TABLE ALM_ALUMNO (
+    ALM_ID INT PRIMARY KEY AUTO_INCREMENT,
+    ALM_CODIGO VARCHAR(100),
+    ALM_NOMBRE VARCHAR(300),
+    ALM_EDAD INT,
+    ALM_SEXO VARCHAR(100),
+    ALM_ID_GRD INT,
+    ALM_OBSERVACION VARCHAR(300),
+    FOREIGN KEY (ALM_ID_GRD)
+        REFERENCES GRD_GRADO (GRD_ID)
+);
+INSERT INTO MAT_MATERIA VALUES (NULL,'Ingles');
+INSERT INTO MAT_MATERIA VALUES (NULL,'Matematica');
+INSERT INTO MAT_MATERIA VALUES (NULL,'Sociales');
+INSERT INTO MAT_MATERIA VALUES (NULL,'Ciencias');
+INSERT INTO MAT_MATERIA VALUES (NULL,'Arte');
+INSERT INTO MAT_MATERIA VALUES (NULL,'Lenguaje');
+
+INSERT INTO GRD_GRADO VALUES (NULL,'Primero');
+INSERT INTO GRD_GRADO VALUES (NULL,'Segundo');
+INSERT INTO GRD_GRADO VALUES (NULL,'Tercero');
+INSERT INTO GRD_GRADO VALUES (NULL,'Cuarto');
+INSERT INTO GRD_GRADO VALUES (NULL,'Quinto');
+INSERT INTO GRD_GRADO VALUES (NULL,'Sexto');
+INSERT INTO GRD_GRADO VALUES (NULL,'Septimo');
+
+INSERT INTO MXG_MATERIASXGRADO VALUES (1,1,3);
+INSERT INTO MXG_MATERIASXGRADO VALUES (2,1,2);/*PRIMER GRADO ESTA CON LAS MATERIAS DE SOCIALES, MATEMATICAS Y CIENCIA*/
+INSERT INTO MXG_MATERIASXGRADO VALUES (3,1,4);
+
+INSERT INTO MXG_MATERIASXGRADO VALUES (4,2,1);
+INSERT INTO MXG_MATERIASXGRADO VALUES (5,2,2);/*SEGUNDO GRADO ESTA CON LAS MATERIAS DE INGLES,MATE*/
+
+INSERT INTO MXG_MATERIASXGRADO VALUES (6,3,4);
+INSERT INTO MXG_MATERIASXGRADO VALUES (7,3,5);/*TERCER GRADO ESTA CON LAS MATERIAS DE CIENCIA,ARTE Y LENGUAJE*/
+INSERT INTO MXG_MATERIASXGRADO VALUES (8,3,6);
+
+
+INSERT INTO MXG_MATERIASXGRADO VALUES (9,4,1);
+INSERT INTO MXG_MATERIASXGRADO VALUES (10,4,3);/*CUARTO GRADO ESTA CON LAS MATERIAS DE INGLES SOCIALES Y LENGUAJE*/
+INSERT INTO MXG_MATERIASXGRADO VALUES (11,4,6);
+
+INSERT INTO MXG_MATERIASXGRADO VALUES (12,5,2);
+INSERT INTO MXG_MATERIASXGRADO VALUES (13,5,6);/*Quinto GRADO ESTA CON LAS MATERIAS DE Matematicas Y LENGUAJE*/
+
+
+
+INSERT INTO ALM_ALUMNO VALUES (NULL,'0001','Pedro Gomez',7,'Masculino',1,'Sin observaciones');
+INSERT INTO ALM_ALUMNO VALUES (NULL,'0002','Maria Torres',8,'Femenino',2,'Sin observaciones');
+
+/*Consulta para ver alumnos*/
+SELECT 
+    alm_id,
+    alm_nombre,
+    grd_nombre,
+    INSERT((SELECT 
+                GROUP_CONCAT(mat_nombre
+                        SEPARATOR ', ')
+            FROM
+                mat_materia
+                    INNER JOIN
+                mxg_materiasxgrado ON mxg_id_mat = mat_Id
+            WHERE
+                mxg_id_grd = grd_id),
+        0,
+        0,
+        '') AS materias
+FROM
+    alm_alumno
+        INNER JOIN
+    grd_grado ON grd_id = alm_id_grd
+        INNER JOIN
+    mxg_materiasxgrado ON mxg_id_grd = grd_id
+
+GROUP BY ALM_ID ORDER BY alm_id ASC;
+
+/*Consulta para ver grados con sus respectiva materias*/
+
+	SELECT 
+    GRD_ID,
+    GRD_NOMBRE,
+    INSERT((SELECT 
+                GROUP_CONCAT(mat_nombre
+                        SEPARATOR ', ')
+            FROM
+                mat_materia
+                    INNER JOIN
+                mxg_materiasxgrado ON mxg_id_mat = mat_Id
+            WHERE
+                mxg_id_grd = grd_id),
+        0,
+        0,
+        '') AS materias
+FROM
+    mxg_materiasxgrado
+    	INNER JOIN grd_grado ON GRD_ID = MXG_ID_GRD
+ INNER JOIN mat_materia ON MAT_ID = MXG_ID_MAT
+GROUP BY GRD_NOMBRE ORDER BY GRD_ID ASC
+/*-------------------------------------------------------------------------------*/
+/*OBTENER TODOS LAS MATERIAS DE UN GRADO*/
+SELECT GRD_NOMBRE,MXG_ID,MAT_NOMBRE FROM MXG_MATERIASXGRADO	INNER JOIN MAT_MATERIA ON MXG_ID_MAT = MAT_ID
+	INNER JOIN GRD_GRADO ON MXG_ID_GRD = GRD_ID
+
+WHERE MXG_ID_GRD = 1;
+/*-----------------------------------------------------------------------*/
+
+SELECT * FROM GRD_GRADO INNER JOIN mxg_materiasxgrado ON GRD_ID = MXG_ID_GRD GROUP BY GRD_ID ASC;
+
+
+/*----------------------------------------------------------------------------------------------*/
+
+SELECT GRD_NOMBRE,
+	COUNT(CASE WHEN ALM_SEXO = "Femenino" then 1 end ) AS FEMENINO,	COUNT(CASE WHEN ALM_SEXO = "Masculino" then 1 end ) AS MASCULINO
+FROM ALM_ALUMNO 
+	INNER JOIN GRD_GRADO ON GRD_ID = ALM_ID_GRD
+GROUP BY GRD_ID
+
+SELECT 
+	COUNT(CASE WHEN ALM_EDAD > 18 then 1 end ) AS Mayores_edad,
+	COUNT(CASE WHEN ALM_EDAD < 18 then 1 end ) AS Menores_edad
+FROM ALM_ALUMNO 
+/*--------------------------------------*/
+
+SELECT 
+	GRD_NOMBRE,
+	COUNT(ALM_ID),
+	ALM_SEXO 
+	FROM ALM_ALUMNO
+	INNER JOIN GRD_GRADO ON GRD_ID = ALM_ID_GRD
+	group by GRD_ID, ALM_SEXO
+/*---------------------------------------------------------------------------*/
+
+SELECT ALM_CODIGO FROM ALM_ALUMNO WHERE ALM_ID = 1;

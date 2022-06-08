@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-	<a class="navbar-brand mr-1" href="index.html">Start Bootstrap</a>
+	<a class="navbar-brand mr-1" href="<?= base_url() ?>">Grupo Satelite</a>
 
 	<button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
 		<i class="fas fa-bars"></i>
@@ -52,7 +52,7 @@
 				<a class="dropdown-item" href="#">Settings</a>
 				<a class="dropdown-item" href="#">Activity Log</a>
 				<div class="dropdown-divider"></div>
-				<a class="dropdown-item" href="login/logOut">Logout</a>
+				<a class="dropdown-item" href="">Logout</a>
 			</div>
 		</li>
 	</ul>

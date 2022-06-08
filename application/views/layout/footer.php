@@ -36,6 +36,11 @@
 <script src="<?php echo base_url("resources/vendor/datatables/dataTables.bootstrap4.js")?>"></script>
 <!-- Custom scripts for all pages-->
 <script src="<?php echo base_url("resources/js/sb-admin.min.js")?>"></script>
+
+
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 
